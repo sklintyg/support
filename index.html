@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="sv">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<title>Net iD</title>
+
+
+<script type="text/javascript" src="script/netid-1.1.5.js"></script>
+<script type="text/javascript">
+    function sign() {
+
+      // Clear result fields
+      var resultEl = document.getElementById("result");
+      var signatureEl = document.getElementById("signature");
+      var certificateEl = document.getElementById("certificate");
+	  var netidEl = document.getElementById("netid");
+      
+      netidEl.innerHTML= iid_GetProperty('Version');
+      resultEl.innerHTML = "";
+      signatureEl.innerHTML = "";
+      certificateEl.innerHTML = "";
+
+      iid_Invoke('Reset'); // jshint ignore:line
+      iid_SetProperty('Authentication', 'false'); // jshint ignore:line
+      iid_SetProperty('Algorithm', '1.2.840.113549.1.1.11'); // jshint ignore:line
+      iid_SetProperty('Base64', 'true'); // jshint ignore:line
+      iid_SetProperty('Raw', 'true'); // jshint ignore:line
+      iid_SetProperty('Data', 'hash123123213123123132132131'); // jshint ignore:line
+      iid_SetProperty('URLEncode', 'false'); // jshint ignore:line
+      var resultCode = iid_Invoke('Sign');
+
+      if (resultCode === 0) {
+        var signatur = iid_GetProperty('Signature');
+        var certifikat = iid_GetProperty('Certificate');
+
+        resultEl.innerHTML = "OK";
+        signatureEl.innerHTML = signatur;
+        certificateEl.innerHTML = certifikat;
+
+        console.log('OK\n' + signatur + '\n' + certifikat);
+
+      } else {
+        var messageAbort = 'Signeringen avbröts med kod: ' + resultCode + ', msg: ' + iid_GetProperty(
+            'Error' + resultCode);
+
+        resultEl.innerHTML = messageAbort;
+        signatureEl.innerHTML = "";
+        certificateEl.innerHTML = "";
+
+        console.log(messageAbort);
+      }
+    }
+
+  </script>
+<style type="text/css">
+  table, th, td {
+    border: 1px solid black;
+  }
+
+  table {
+    table-layout: fixed;
+    width: 100%;
+  }
+
+  table td {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  tr td:first-child {
+    width: 80px;
+  }
+
+  input {
+  	font-size: 20px;
+  	font-weight: bold;
+  	background-color: gold;
+  }
+</style>
+
+</head>
+
+<body>
+	<noscript><b>Javascript is turned off or you don't have a browser that can handle javascript.</b></noscript>
+
+  <p>Testa signering genom att trycka på knappen nedan. Säkerställ att ditt SITHS-kort sitter i kortläsaren.</p>
+
+  <form name="form">
+    <input onClick="sign()"" type="button" value="Testa signera"><br />
+  </form>
+
+	<div>
+		<p>Efter signering presenteras resultatet nedan.</p>
+		--------------------START KOPIERING--------------------<br/>
+	  <table>
+	    <tr>
+	      <td>NetID Version</td>
+	      <td id="netid"></td>
+	    </tr>  	
+	    <tr>
+	      <td>Resultat</td>
+	      <td id="result"></td>
+	    </tr>
+	    <tr>
+	      <td>Signatur</td>
+	      <td id="signature"></td>
+	    </tr>
+	    <tr>
+	      <td>Certifikat</td>
+	      <td id="certificate"></td>
+	    </tr>
+	  </table>
+	  --------------------SLUT KOPIERING--------------------<br/>
+	</div>
+</body>
+
+
+</html>
