@@ -9,15 +9,31 @@
 
 <script type="text/javascript" src="script/netid-1.1.5.js"></script>
 <script type="text/javascript">
+
+
+  function check() {
+    var available = iid_IsAvailable();
+    var explorer = iid_IsExplorer();
+
+    if(!available){
+      document.getElementById("signbutton").disabled = true;
+      var resultEl = document.getElementById("result");
+      if(!explorer){
+        resultEl.innerHTML = "Du måste använda Internet Explorer!";
+      } else {
+        resultEl.innerHTML = "NetId plugin är inte tillgänglig!";
+      }
+    } else {
+      document.getElementById("netid").innerHTML = iid_GetProperty('Version');
+    }
+  }
     function sign() {
 
       // Clear result fields
       var resultEl = document.getElementById("result");
       var signatureEl = document.getElementById("signature");
       var certificateEl = document.getElementById("certificate");
-	  var netidEl = document.getElementById("netid");
-      
-      netidEl.innerHTML= iid_GetProperty('Version');
+
       resultEl.innerHTML = "";
       signatureEl.innerHTML = "";
       certificateEl.innerHTML = "";
@@ -39,8 +55,6 @@
         signatureEl.innerHTML = signatur;
         certificateEl.innerHTML = certifikat;
 
-        console.log('OK\n' + signatur + '\n' + certifikat);
-
       } else {
         var messageAbort = 'Signeringen avbröts med kod: ' + resultCode + ', msg: ' + iid_GetProperty(
             'Error' + resultCode);
@@ -49,10 +63,8 @@
         signatureEl.innerHTML = "";
         certificateEl.innerHTML = "";
 
-        console.log(messageAbort);
       }
     }
-
   </script>
 <style type="text/css">
   table, th, td {
@@ -82,13 +94,13 @@
 
 </head>
 
-<body>
+<body onload="check()">
 	<noscript><b>Javascript is turned off or you don't have a browser that can handle javascript.</b></noscript>
 
   <p>Testa signering genom att trycka på knappen nedan. Säkerställ att ditt SITHS-kort sitter i kortläsaren.</p>
 
   <form name="form">
-    <input onClick="sign()"" type="button" value="Testa signera"><br />
+    <input id="signbutton" onClick="sign()" type="button" value="Testa signera"><br />
   </form>
 
 	<div>
@@ -98,7 +110,7 @@
 	    <tr>
 	      <td>NetID Version</td>
 	      <td id="netid"></td>
-	    </tr>  	
+	    </tr>
 	    <tr>
 	      <td>Resultat</td>
 	      <td id="result"></td>
