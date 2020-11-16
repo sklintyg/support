@@ -1,0 +1,5 @@
+= support
+
+Static content for temporary support issues.
+
+NOTE: This document uses Asciidoc
