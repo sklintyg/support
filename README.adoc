@@ -6,7 +6,9 @@ ifdef::env-github[]
 :warning-caption: :warning:
 endif::[]
 
-= support
+:icons: font
+
+== Support
 
 Static content for temporary support issues.
 
